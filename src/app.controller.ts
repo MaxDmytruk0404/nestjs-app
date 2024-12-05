@@ -5,6 +5,11 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('hello')
+  async hello() {
+    return 'hello'
+  }
+
   @Get('cheack-email/:email')
   async cheackEmail(@Param('email') email: string) {
     const exists = await this.appService.checkEmail(email);
