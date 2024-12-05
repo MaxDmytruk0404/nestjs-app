@@ -11,22 +11,22 @@ export class AppController {
     return 'hello'
   }
 
-  @Get('test-db')
-  async testDB() {
-    try {
-      await this.dataSource.query('SELECT 1');
-      return { connected: true };
-    } catch (error) {
-      console.error('Database connection failed:', error);
-      return { connected: false, error };
-    }
-  }
-
   @Get('cheack-email/:email')
-  async cheackEmail(@Param('email') email: string) {
+async cheackEmail(@Param('email') email: string) {
+  try {
     const exists = await this.appService.checkEmail(email);
-    return { exists }
+    return { exists };
+  } catch (error) {
+    console.error('Error checking email:', error);
+    return { statusCode: 500, message: 'Internal server error', error: error.message };
   }
+}
+
+  // @Get('cheack-email/:email')
+  // async cheackEmail(@Param('email') email: string) {
+  //   const exists = await this.appService.checkEmail(email);
+  //   return { exists }
+  // }
  
   @Get('user-info/:email')
   async getUserInfo(@Param('email') email: string) {
