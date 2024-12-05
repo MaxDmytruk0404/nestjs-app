@@ -1,9 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from './database/database.service';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService, private readonly dataSource: DataSource) {}
+
+  async checkDBConnection(): Promise<boolean> {
+    try {
+      await this.dataSource.query('SELECT 1');
+      return true;
+    } catch (error) {
+      console.error('Database connection error:', error);
+      return false;
+    }
+  }
 
   // Збереження інформації коли користувач зареєструвався
   async save(dto: any) {

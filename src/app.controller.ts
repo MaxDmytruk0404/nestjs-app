@@ -1,13 +1,25 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { DataSource } from 'typeorm';
 
 @Controller('app')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService, private readonly dataSource: DataSource) {}
 
   @Get('hello')
   async hello() {
     return 'hello'
+  }
+
+  @Get('test-db')
+  async testDB() {
+    try {
+      await this.dataSource.query('SELECT 1');
+      return { connected: true };
+    } catch (error) {
+      console.error('Database connection failed:', error);
+      return { connected: false, error };
+    }
   }
 
   @Get('cheack-email/:email')
